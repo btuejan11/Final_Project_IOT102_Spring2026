@@ -52,8 +52,6 @@ bool CheckFinish = false;
 unsigned long lastDistanceTime = 0;
 int distance = 0;
 
-
-
 void setup() {
 
   pinMode(TRIG_PIN, OUTPUT);
@@ -64,7 +62,6 @@ void setup() {
   pinMode(sensor3, INPUT);
   pinMode(sensor4, INPUT);
   pinMode(sensor5, INPUT);
-
 
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
@@ -95,7 +92,6 @@ unsigned long currentTime = millis();
     Serial.println(distance);
   }
 
-
   int s1 = digitalRead(sensor1);
   int s2 = digitalRead(sensor2);
   int s3 = digitalRead(sensor3);
@@ -112,7 +108,6 @@ unsigned long currentTime = millis();
     CheckFinish = true;    
   }
   
-
   if (distance > 0 && distance <= 40) {
     stopCar();
    while (!CheckBienBao) {
@@ -169,9 +164,6 @@ unsigned long currentTime = millis();
            }
   }
 }
-
-
-
 
 void PIDControl() {
 
@@ -269,7 +261,7 @@ void spinRight() {
   analogWrite(ena, 130);
   analogWrite(enb, 130);
 }
-// Hàm in ra trạng thái tiến
+
 void forward() {
   MOTOR_A_FORWARD();
   MOTOR_B_FORWARD();
@@ -278,9 +270,6 @@ void forward() {
   Serial.println("Chay thang");
 }
 
-
-
-// Hàm điều khiển xe rẽ trái
 void turnLeft() {
   MOTOR_A_BACKWARD();
   MOTOR_B_FORWARD();
@@ -290,7 +279,6 @@ void turnLeft() {
 
 }
 
-// Hàm điều khiển xe rẽ phải
 void turnRight() {
   MOTOR_A_FORWARD();
   MOTOR_B_BACKWARD();
