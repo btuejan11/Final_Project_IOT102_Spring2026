@@ -35,8 +35,8 @@ const int enb = 10;
 #define MOTOR_A_STOP()     { digitalWrite(in1, LOW);  digitalWrite(in2, LOW);  } 
 
 // ==================== MOTOR B = TRÁI (theo hướng người ngồi) ====================
-#define MOTOR_B_FORWARD()  { digitalWrite(in3, HIGH); digitalWrite(in4, LOW);  } //BÊN TRÁI NGƯỜI NGỒI XE
-#define MOTOR_B_BACKWARD() { digitalWrite(in3, LOW);  digitalWrite(in4, HIGH); } 
+#define MOTOR_B_FORWARD()  { digitalWrite(in3, LOW); digitalWrite(in4, HIGH);  } //BÊN TRÁI NGƯỜI NGỒI XE
+#define MOTOR_B_BACKWARD() { digitalWrite(in3, HIGH);  digitalWrite(in4, LOW); } 
 #define MOTOR_B_STOP()     { digitalWrite(in3, LOW);  digitalWrite(in4, LOW);  } 
 
 bool checkOutLined = true;
@@ -52,6 +52,8 @@ bool CheckFinish = false;
 unsigned long lastDistanceTime = 0;
 int distance = 0;
 
+
+
 void setup() {
 
   pinMode(TRIG_PIN, OUTPUT);
@@ -62,6 +64,7 @@ void setup() {
   pinMode(sensor3, INPUT);
   pinMode(sensor4, INPUT);
   pinMode(sensor5, INPUT);
+
 
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
@@ -92,6 +95,7 @@ unsigned long currentTime = millis();
     Serial.println(distance);
   }
 
+
   int s1 = digitalRead(sensor1);
   int s2 = digitalRead(sensor2);
   int s3 = digitalRead(sensor3);
@@ -102,13 +106,14 @@ unsigned long currentTime = millis();
   if (s1 == zero && s2 == zero && s3 == zero && s4 == zero && s5 == zero && CheckBienBao ) {
     if (CheckFinish) {
       while(true){
-        stopCar();
+        stopCar;
       }
     }
     CheckFinish = true;    
   }
   
-  if (distance > 0 && distance <= 40) {
+
+  if (distance > 0 && distance <= 15) {
     stopCar();
    while (!CheckBienBao) {
         CheckFinish = false;
@@ -136,14 +141,13 @@ unsigned long currentTime = millis();
           else if (msg.indexOf("Right") != -1 && confidence > 85.0) {
               CheckOj = true;
               CheckBienBao = true;
-              searchForLine();
+              searchForLineIn();
              }
            }
         }
       }
     }
   }
-
   else {
            if (CheckOj == false){
             if (s1 == zero && s2 == zero && s3 == zero && s4 == zero && s5 == zero && CheckBienBao) {
@@ -165,6 +169,9 @@ unsigned long currentTime = millis();
   }
 }
 
+
+
+
 void PIDControl() {
 
               int s1 = digitalRead(sensor1);
@@ -172,7 +179,6 @@ void PIDControl() {
               int s3 = digitalRead(sensor3);
               int s4 = digitalRead(sensor4);
               int s5 = digitalRead(sensor5);
-            
               if (s1 == 1 && (s2 == 0 || s3 == 0 || s4 == 0) && s5 == 1) {
                 forward(); 
               } else if (s1 == 1 && s2 == 1 && s3 == 1 && s4 == 1 && s5 == 0) {
@@ -209,7 +215,7 @@ void FourWayHandle() {
 
 void searchForLineIn() {
   bool foundLine = false;
-  spinLeft();
+  spinLeft();  // Hoặc turnLeft() tùy thuộc vào hướng muốn quay
   delay(400);
   while (!foundLine) {
 
@@ -244,8 +250,6 @@ void searchForLine() {
     }
   }
 }
-
-
 // Quay tại chỗ trái (hai motor ngược chiều)
 void spinLeft() {
   MOTOR_A_BACKWARD();
@@ -261,7 +265,7 @@ void spinRight() {
   analogWrite(ena, 130);
   analogWrite(enb, 130);
 }
-
+// Hàm in ra trạng thái tiến
 void forward() {
   MOTOR_A_FORWARD();
   MOTOR_B_FORWARD();
@@ -270,6 +274,9 @@ void forward() {
   Serial.println("Chay thang");
 }
 
+
+
+// Hàm điều khiển xe rẽ trái
 void turnLeft() {
   MOTOR_A_BACKWARD();
   MOTOR_B_FORWARD();
@@ -279,6 +286,7 @@ void turnLeft() {
 
 }
 
+// Hàm điều khiển xe rẽ phải
 void turnRight() {
   MOTOR_A_FORWARD();
   MOTOR_B_BACKWARD();
